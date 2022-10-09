@@ -1,32 +1,56 @@
 from unidecode import unidecode
 import string
 
-def normalizar(cadena):
-    cadena = unidecode(cadena.lower())
-    for c in string.punctuation:
-        cadena = cadena.replace(c,'')
-    return cadena
+def normalizar_texto(texto):
+    """Esta función normaliza a minúsculas y quita los signos de puntuación a una cadena de texto
 
-def contar_palabras(lista,palabra):
-    cont = 0
-    for c in lista:
-        if c == palabra:
-            cont+=1
-    return cont
-    
-def imprimir(lista):
-    for i in lista:
-        print(i)
+    Args:
+        texto (str): Cadena de texto a normalizar
 
-cadena = "Hola, qué haces? Cómo estás?"
+    Returns:
+        str: Cadena de texto normalizada
+    """
+    texto_minusculas = texto.lower()
+    texto_sin_puntuacion = unidecode(texto_minusculas)
+    for caracter in string.punctuation:
+        texto_sin_puntuacion = texto_sin_puntuacion.replace(caracter,'')
+    return texto_sin_puntuacion
 
-lista_de_palabras = normalizar(cadena).split(' ')
+def separar_palabras(cadena_normalizada):
+    """Esta función regresa una lista de palabras de una cadena de texto
 
-lista_impresiones = []
+    Args:
+        cadena_normalizada (str): Cadena de texto para separar en palabras
 
-for palabra in lista_de_palabras:
-    impr = f'{palabra}\taparece\t{contar_palabras(lista_de_palabras,palabra)}\tveces'
-    if not(impr in lista_impresiones):
-        lista_impresiones.append(impr)
+    Returns:
+        list[str]: Lista de palabras
+    """
+    return cadena_normalizada.split(' ')
 
-imprimir(lista_impresiones)
+def contar_palabras(lista_de_palabras):
+    """Esta función regresa un diccionario con las veces que una palabra aparece en una lista
+
+    Args:
+        lista_de_palabras (list[str]): Lista de palabras para analizar
+
+    Returns:
+        dict: Dicccionario que contiene las palabras y el número de veces que aparece en la lista
+    """
+    diccionario = {}
+    for palabra in lista_de_palabras:
+        if palabra in diccionario:
+            diccionario[palabra] +=1
+        else:
+            diccionario[palabra] = 1
+    return diccionario 
+
+texto = "Hola, qué haces? Cómo estás?"
+
+texto_normalizado = normalizar_texto(texto)
+
+lista_palabras = separar_palabras(texto_normalizado)
+
+palabras_contadas = contar_palabras(lista_palabras)
+
+for palabra in palabras_contadas:
+    print(f'La palabra:\t{palabra}\taparece:\t{palabras_contadas[palabra]}\tveces')
